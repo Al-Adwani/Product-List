@@ -32,7 +32,7 @@ const productDelete = async (req, res) => {
     if (foundProduct) {
       foundProduct.remove();
       res.status(204).end();
-      console.log("Inside if");
+      console.log("Delete is working");
     } else {
       return res.status(404).json({ message: "this product doesn't exist" });
     }
@@ -52,5 +52,20 @@ const productDelete = async (req, res) => {
     return res.status(404).json({ message: "Not Foound" });
   } */
 };
+const productUpdate = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const foundProduct = await Product.findById(productId);
+    if (foundProduct) {
+      const updatedProduct = await foundProduct.updateOne(req.body);
+      res.status(204).json(updatedProduct);
+      console.log("Update is working");
+    } else {
+      return res.status(404).json({ message: "this product doesn't exist" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
 
-module.exports = { productDelete, productFitch, productPost };
+module.exports = { productDelete, productFitch, productPost, productUpdate };
