@@ -1,8 +1,14 @@
-let products = require("../../data");
+/* let products = require("../../data"); */
+const Product = require("../../models/Product");
 
-const productFitch = (req, res) => {
-  res.json(products);
-  console.log("get is working");
+const productFitch = async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+    console.log("get is working");
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
 };
 
 const productPost = (req, res) => {
