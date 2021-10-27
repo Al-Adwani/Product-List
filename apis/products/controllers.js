@@ -1,26 +1,26 @@
 /* let products = require("../../data"); */
 const Product = require("../../models/Product");
 
-const productFitch = async (req, res) => {
+const productFitch = async (req, res, next) => {
   try {
     const products = await Product.find();
     res.json(products);
     console.log("get is working");
   } catch (error) {
-    res.status(500).json({ message: error });
+    next(error);
   }
 };
 
-const productPost = async (req, res) => {
+const productPost = async (req, res, next) => {
   try {
     const newProduct = await Product.create(req.body);
     res.status(201).json(newProduct);
     console.log("post is working");
   } catch (error) {
-    res.status(500).json({ message: error });
+    next(error);
   }
 };
-const productDelete = async (req, res) => {
+const productDelete = async (req, res, next) => {
   try {
     const productId = req.params.productId;
     console.log(productId);
@@ -37,7 +37,7 @@ const productDelete = async (req, res) => {
       return res.status(404).json({ message: "this product doesn't exist" });
     }
   } catch (error) {
-    res.status(404).json({ message: error });
+    next(error);
   }
   /*  const productId = req.params.productId;
   console.log(productId);
@@ -52,7 +52,7 @@ const productDelete = async (req, res) => {
     return res.status(404).json({ message: "Not Foound" });
   } */
 };
-const productUpdate = async (req, res) => {
+const productUpdate = async (req, res, next) => {
   try {
     const productId = req.params.productId;
     const foundProduct = await Product.findById(productId);
@@ -64,7 +64,7 @@ const productUpdate = async (req, res) => {
       return res.status(404).json({ message: "this product doesn't exist" });
     }
   } catch (error) {
-    res.status(500).json({ message: error });
+    next(error);
   }
 };
 
