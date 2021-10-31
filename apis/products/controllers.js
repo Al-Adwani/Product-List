@@ -1,6 +1,15 @@
 /* let products = require("../../data"); */
 const Product = require("../../models/Product");
 
+const fetchProduct = async (productId, next) => {
+  try {
+    const product = await Product.findById(productId);
+    return product;
+  } catch (error) {
+    next(error);
+  }
+};
+
 const productFitch = async (req, res, next) => {
   try {
     const products = await Product.find();
@@ -22,6 +31,15 @@ const productPost = async (req, res, next) => {
 };
 const productDelete = async (req, res, next) => {
   try {
+    await req.product.remove();
+    res.status(204).end();
+    
+  } catch (err) {
+    next(error);
+  }
+};
+  // delete before cleanup
+  /* try {
     const productId = req.params.productId;
     console.log(productId);
 
@@ -38,8 +56,11 @@ const productDelete = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
-  }
-  /*  const productId = req.params.productId;
+  } */
+ 
+
+
+ /*  const productId = req.params.productId;
   console.log(productId);
   const foundProduct = products.find((product) => product.id === +productId);
   console.log(foundProduct);
@@ -51,9 +72,20 @@ const productDelete = async (req, res, next) => {
   } else {
     return res.status(404).json({ message: "Not Foound" });
   } */
-};
 const productUpdate = async (req, res, next) => {
   try {
+      await Product.findByIdAndUpdate(
+      { _id: req.product._id },
+      req.body,
+      { new: true, runValidators: true }
+    );
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+// code before cleanup
+/*  try {
     const productId = req.params.productId;
     const foundProduct = await Product.findById(productId);
     if (foundProduct) {
@@ -66,6 +98,12 @@ const productUpdate = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}; */
 
-module.exports = { productDelete, productFitch, productPost, productUpdate };
+module.exports = {
+  productDelete,
+  productFitch,
+  productPost,
+  productUpdate,
+  fetchProduct,
+};
